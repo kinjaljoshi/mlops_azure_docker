@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>MLOPS Assgn 2: Predict Diabetes</title>
+		<script src="https://kit.fontawesome.com/5f3f547070.js" crossorigin="anonymous"></script>
+		<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+	</head>
+
+    <body>
+
+        <!-- Website Title -->
+		<div class="container">
+            <h2 class='container-heading'><span class="heading_font">MLOPS Assgn2 Diabetes predictor</span></h2>
+            <div class='description'>
+    			<p>AutoML model with ML serve using Flask</p>
+    		</div>
+    	</div>
+
+		<!-- Result -->
+		<div class="results">
+			{% if prediction == 'yes' %}
+                    <h1>Prediction: <span class='danger'>You are likely to have diabetes, please consult a doctor.</span></h1>
+            {% elif prediction == 'no' %}
+                    <h1>Prediction: <span class='safe'>Congratulations, you are not likely to have diabetes.</span></h1>
+            {% endif %}
+		</div>
+
+	</body>
+</html>
