@@ -1,0 +1,51 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy container app to Azure Web App - dpredictapp
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: 'ubuntu-latest'
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Log in to registry
+      uses: docker/login-action@v2
+      with:
+        registry: https://bitsmlops.azurecr.io/
+        username: ${{ secrets.AzureAppService_ContainerUsername_220cc3b9e87e47188ce47a3f95549cef }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_fd7428787db04366b00a8631c7a47c6b }}
+
+    - name: Build and push container image to registry
+      uses: docker/build-push-action@v3
+      with:
+        push: true
+        tags: bitsmlops.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_220cc3b9e87e47188ce47a3f95549cef }}/diabetes_predict_app:${{ github.sha }}
+        file: ./Dockerfile
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+    - name: Deploy to Azure Web App
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'dpredictapp'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_bb8769a8009e49a0b7fcce96843946f1 }}
+        images: 'bitsmlops.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_220cc3b9e87e47188ce47a3f95549cef }}/diabetes_predict_app:${{ github.sha }}'
