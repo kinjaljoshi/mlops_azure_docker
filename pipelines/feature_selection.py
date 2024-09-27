@@ -19,6 +19,8 @@ def plot_feature_ranges_vs_outcome(df, features, outcome_col, bins=15):
     # Ensure only rows with valid 'yes' and 'no' in the outcome column are mapped
     df = df[df[outcome_col].isin(['yes', 'no'])].copy()
 
+
+
     # Map 'yes' to 1 and 'no' to 0 in the outcome column
     df[outcome_col] = df[outcome_col].map({'yes': 1, 'no': 0})
 
